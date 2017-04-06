@@ -15,6 +15,20 @@ int main() {
     CARLsim sim("stdp_mnist_carlsim3", CPU_MODE, USER, ithGPU, randSeed);
 
     // Configure the network.
+    bool test_mode = false;
+    int num_examples;
+    if (test_mode)
+        num_examples = 10000;
+    else
+        num_examples = 60000;
+
+    int single_example_time = 350;
+    int resting_time = 150;
+    int runtime = num_examples * (single_example_time + resting_time);
+
+    float input_intensity = 2.;
+    float start_input_intensity = input_intensity;
+
     int n_in = 784;
     int n_exc = 400;
     int n_inh = n_exc;
