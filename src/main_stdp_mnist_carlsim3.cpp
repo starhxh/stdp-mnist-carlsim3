@@ -10,9 +10,7 @@ int main() {
 
 
     // ---------------- CONFIG STATE -------------------
-    int ithGPU = 0;
-    int randSeed = 42;
-    CARLsim sim("stdp_mnist_carlsim3", CPU_MODE, USER, ithGPU, randSeed);
+    CARLsim sim("stdp_mnist_carlsim3", GPU_MODE, USER, /*ithGPU=*/0, /*randSeed=*/42);
 
     // Configure the network.
     bool test_mode = false;
