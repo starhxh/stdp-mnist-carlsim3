@@ -29,7 +29,7 @@ int main() {
     int resting_time = 150;
     int runtime = num_examples * (single_example_time + resting_time);
 
-    float input_intensity = 2.;
+    float input_intensity = 2.0f;
     float start_input_intensity = input_intensity;
 
     int n_in = 784;
