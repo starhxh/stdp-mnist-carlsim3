@@ -1,6 +1,14 @@
+#include "mnist.h"
 #include "myconnection.h"
 
 #include <carlsim.h>
+
+#include <iostream>
+#include <vector>
+
+using std::cout;
+using std::vector;
+typedef unsigned char uint8_t;
 
 
 int main() {
@@ -27,6 +35,18 @@ int main() {
     int n_in = 784;
     int n_exc = 400;
     int n_inh = n_exc;
+
+
+    // Read dataset
+    vector<vector<uint8_t> > images;
+    vector<uint8_t> labels;
+    if (test_mode) {
+        read_mnist_images("mnist/t10k-images-idx3-ubyte", images, 10000);
+        read_mnist_labels("mnist/t10k-labels-idx1-ubyte", labels, 10000);
+    } else {
+        read_mnist_images("mnist/train-images-idx3-ubyte", images, 60000);
+        read_mnist_labels("mnist/train-labels-idx1-ubyte", labels, 60000);
+    }
 
 
     // ---------------- CONFIG STATE -------------------
