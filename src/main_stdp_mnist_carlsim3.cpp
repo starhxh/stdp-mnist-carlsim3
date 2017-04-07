@@ -9,10 +9,7 @@ int main() {
     Stopwatch watch;
 
 
-    // ---------------- CONFIG STATE -------------------
-    CARLsim sim("stdp_mnist_carlsim3", GPU_MODE, USER, /*ithGPU=*/0, /*randSeed=*/42);
-
-    // Configure the network.
+    // Set parameters
     bool test_mode = false;
     int num_examples;
     if (test_mode)
@@ -31,6 +28,11 @@ int main() {
     int n_exc = 400;
     int n_inh = n_exc;
 
+
+    // ---------------- CONFIG STATE -------------------
+    CARLsim sim("stdp_mnist_carlsim3", GPU_MODE, USER, /*ithGPU=*/0, /*randSeed=*/42);
+
+    // Configure the network
     int group_in = sim.createSpikeGeneratorGroup("input", n_in, EXCITATORY_NEURON);
     int group_exc = sim.createGroup("excitatory", n_exc, EXCITATORY_NEURON);
     int group_inh = sim.createGroup("inhibitory", n_inh, INHIBITORY_NEURON);
@@ -49,7 +51,7 @@ int main() {
 
 
     // ---------------- SETUP STATE -------------------
-    // build the network
+    // Build the network
     watch.lap("setupNetwork");
     sim.setupNetwork();
 
