@@ -59,14 +59,15 @@ int main() {
     sim.setNeuronParameters(group_inh, 0.02f, 0.2f, -65.0f, 8.0f);
 
     MyFullConnection myFullConn;
-    sim.connect(group_in, group_exc, &myFullConn, SYN_PLASTIC);
+    sim.connect(group_in, group_exc, &myFullConn, /*mulSynFast=*/1.0f, /*mulSynSlow=*/0.0f, SYN_PLASTIC);
     MyOneToOneConnection myOneToOneConn;
-    sim.connect(group_exc, group_inh, &myOneToOneConn);
-    sim.connect(group_inh, group_exc, "full-no-direct", RangeWeight(17.0), 1.0f);
+    sim.connect(group_exc, group_inh, &myOneToOneConn, /*mulSynFast=*/1.0f, /*mulSynSlow=*/0.0f);
+    sim.connect(group_inh, group_exc, "full-no-direct", RangeWeight(17.0), /*connProp=*/1.0f, RangeDelay(1), RadiusRF(-1), SYN_FIXED, /*mulSynFast=*/1.0f, /*mulSynSlow=*/0.0f);
 
     // sim.setESTDP(group_exc, true, STANDARD, ExpCurve(0.001f, 20.0f, 0.0015f, 20.0f));
 
-    sim.setConductances(true);
+    // tdNMDA and tdGABAb are not used due to zero gain factor of slow synaptic channels (mulSynSlow is 0)
+    sim.setConductances(true, /*tdAMPA=*/1, /*tdNMDA=*/150, /*tdGABAa=*/2, /*tdGABAb=*/150);
 
 
     // ---------------- SETUP STATE -------------------
