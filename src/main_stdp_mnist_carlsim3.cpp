@@ -73,20 +73,50 @@ int main() {
     watch.lap("setupNetwork");
     sim.setupNetwork();
 
-    sim.setSpikeMonitor(group_in, "DEFAULT");
-    sim.setSpikeMonitor(group_exc, "DEFAULT");
-    sim.setConnectionMonitor(group_in, group_exc, "DEFAULT");
+    SpikeMonitor *spkMon = sim.setSpikeMonitor(group_exc, "DEFAULT");
+    ConnectionMonitor *connMon = sim.setConnectionMonitor(group_in, group_exc, "DEFAULT");
 
-    PoissonRate in(n_in);
-    in.setRates(30.0f);
-    sim.setSpikeRate(group_in, &in);
+    PoissonRate poissRate(n_in, /*onGPU=*/true);
+    PoissonRate poissRateSilent(n_in, /*onGPU=*/true);
+    poissRateSilent.setRates(0);
 
 
     // ---------------- RUN STATE -------------------
     watch.lap("runNetwork");
 
-    for (int i = 0; i < 10; i++) {
-        sim.runNetwork(1, 0);
+    int i = 0;
+    while (i < 10) {
+        if (test_mode == false) {
+            // normalization
+        }
+
+        // Set rate for next image
+        for (int j = 0; j < n_in; j++) {
+            poissRate.setRate(j, (float)images[i % num_examples][j] / 8.0f * input_intensity);
+        }
+        sim.setSpikeRate(group_in, &poissRate);
+
+        spkMon->startRecording();
+        sim.runNetwork(0, single_example_time);
+        spkMon->stopRecording();
+
+        if (spkMon->getPopNumSpikes() < 5) {
+            input_intensity += 1;
+            sim.setSpikeRate(group_in, &poissRateSilent);
+            sim.runNetwork(0, resting_time);
+        } else {
+            if (test_mode) {
+                //save
+            }
+
+            if (i % 100 == 0)
+                cout << "runs done: " << i << " of " << num_examples << endl;
+
+            sim.setSpikeRate(group_in, &poissRateSilent);
+            sim.runNetwork(0, resting_time);
+            input_intensity = start_input_intensity;
+            i++;
+        }
     }
 
     watch.stop(); // Print stopwatch summary
