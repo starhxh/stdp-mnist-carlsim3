@@ -45,6 +45,8 @@ int main() {
     sim.connect(group_exc, group_inh, &myOneToOneConn);
     sim.connect(group_inh, group_exc, "full-no-direct", RangeWeight(17.0), 1.0f);
 
+    sim.setESTDP(group_exc, true, STANDARD, ExpCurve(0.001f, 20.0f, 0.0015f, 20.0f));
+
     sim.setConductances(true);
 
 
