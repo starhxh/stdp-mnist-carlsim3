@@ -32,7 +32,6 @@ int main() {
     // ---------------- CONFIG STATE -------------------
     CARLsim sim("stdp_mnist_carlsim3", GPU_MODE, USER, /*ithGPU=*/0, /*randSeed=*/42);
 
-    // Configure the network
     int group_in = sim.createSpikeGeneratorGroup("input", n_in, EXCITATORY_NEURON);
     int group_exc = sim.createGroup("excitatory", n_exc, EXCITATORY_NEURON);
     int group_inh = sim.createGroup("inhibitory", n_inh, INHIBITORY_NEURON);
@@ -51,7 +50,6 @@ int main() {
 
 
     // ---------------- SETUP STATE -------------------
-    // Build the network
     watch.lap("setupNetwork");
     sim.setupNetwork();
 
@@ -67,14 +65,11 @@ int main() {
     // ---------------- RUN STATE -------------------
     watch.lap("runNetwork");
 
-    // Run for a total of 10 seconds.
-    // At the end of each `runNetwork` call, SpikeMonitor stats will be printed (thus, every second).
     for (int i = 0; i < 10; i++) {
         sim.runNetwork(1, 0);
     }
 
-    // Print stopwatch summary
-    watch.stop();
+    watch.stop(); // Print stopwatch summary
 
     return 0;
 }
